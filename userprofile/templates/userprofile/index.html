@@ -1,0 +1,40 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    Hey You!
+    You've got a pretty shit profile.
+    Thankyou.
+    <h3>Profile Details:</h3>
+    User: {{profile.user.username}}
+    age: {{profile.age}}
+    marital status : {{profile.marital_status}}
+    <br><br>
+    {% if is_self %}
+        This is my own profile
+        <a href={% url 'user_profile:profile-edit' request.user.userr.id %}><button class="btn btn-primary"><i class="fas fa-user-edit">  Edit Profile</i></button></a>
+    {% elif is_connection %}
+    <div class="nav-item dropdown" ">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-primary"><i class="fas fa-user-check"></i> Connected</button>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href={% url 'user_connection:disconnect-user' profile.user.id %}>Disconnect</a>
+          <a class="dropdown-item" href="#">Block</a>
+          
+        </div>
+    </div>
+        
+    {% elif request_sent %}
+    <a href={% url 'user_connection:cancel-request' profile.id %}><button class="btn btn-danger"><i class="far fa-window-close"></i> Cancel request</button></a>
+    {% elif request_received %}
+        This profile has sent you a connection Request
+        <a href={% url 'user_connection:accept-request' profile.id %}><button class="btn btn-primary"><i class="fas fa-plus">  Accept</i></button></a>
+        <a href={% url 'user_connection:decline-request' profile.id %}><button class="btn btn-danger"><i class="fas fa-user-times"></i> Decline</button></a>
+    {% elif no_requesst_sent_received %}
+        You can send a connection request to this user
+        <a href={% url 'user_connection:send-request' profile.id %}><button class="btn btn-primary"><i class="fas fa-user-plus"></i>  Connect</button></a>
+    {% else %}
+        Something went wrong
+    {% endif %}
+
+{% endblock content %}
